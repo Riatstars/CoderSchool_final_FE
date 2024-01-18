@@ -17,7 +17,6 @@ const filterPaginationData = async ({
       .post(import.meta.env.VITE_SERVER_DOMAIN + countRoute, data_to_send)
       .then(({ data: { totalDocs } }) => {
         obj = { results: data, page: 1, totalDocs };
-        console.log(obj);
       })
       .catch((err) => {
         console.log(err);

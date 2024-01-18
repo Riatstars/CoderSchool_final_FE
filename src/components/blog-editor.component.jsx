@@ -22,6 +22,7 @@ const BlogEditor = () => {
     setTextEditor,
     Editor,
   } = useContext(EditorContext);
+
   let {
     userAuth: { access_token },
   } = useContext(UserContext);
