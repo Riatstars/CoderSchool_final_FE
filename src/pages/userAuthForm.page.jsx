@@ -40,7 +40,6 @@ const UserAuthForm = ({ type }) => {
           access_token: user.accessToken,
         };
         userAuthThroughServer(serverRoute, formData);
-        axios.post;
       })
       .catch((err) => {
         toast.error("Trouble Login through google");

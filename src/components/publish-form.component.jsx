@@ -4,12 +4,14 @@ import { useContext } from "react";
 import { EditorContext } from "../pages/editor.pages";
 import { Tag } from "./tags.component";
 import { UserContext } from "../App";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 const PublishForm = () => {
   let characterLimit = 200;
   let tagLimit = 10;
+
+  let { blog_id } = useQuery();
   let {
     blog: { banner, title, tags, des, content },
     setBlog,
@@ -82,17 +84,21 @@ const PublishForm = () => {
     };
 
     axios
-      .post(import.meta.env.VITE_SERVER_DOMAIN + "/create-blog", blogObj, {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      })
+      .post(
+        import.meta.env.VITE_SERVER_DOMAIN + "/create-blog",
+        { ...blogObj, id: blog_id },
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      )
       .then(() => {
         e.target.classList.remove("disable");
         toast.dismiss(loadingToast);
         toast.success("Published!");
         setTimeout(() => {
-          navigate("/");
+          navigate("/dashboard/blogs");
         }, 500);
       })
       .catch(({ response }) => {

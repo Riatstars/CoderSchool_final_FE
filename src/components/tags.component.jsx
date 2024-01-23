@@ -1,7 +1,8 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { EditorContext } from "../pages/editor.pages";
 
 export const Tag = ({ tag, tagIndex }) => {
+  const [editable, setEditable] = useState(false);
   let {
     blog,
     setBlog,
@@ -14,7 +15,8 @@ export const Tag = ({ tag, tagIndex }) => {
   };
 
   const addEditable = (e) => {
-    e.target.setAttribute("contentEdditable", true);
+    // e.target.setAttribute("contentEditable", true);
+    setEditable(true);
     e.target.focus();
   };
 
@@ -24,26 +26,25 @@ export const Tag = ({ tag, tagIndex }) => {
       let currentTag = e.target.innerText;
       tags[tagIndex] = currentTag;
       setBlog({ ...blog, tags: tags });
-      e.target.setAttribute("contentEditable", false);
-      console.log(tags);
+      setEditable(false);
+
+      // e.target.setAttribute("contentEditable", false);
     }
   };
   return (
-    <div className="relative p-2 mt-2 mr-2 px-5 bg-white rounded-full inline-block hover:bg-opacity-50 pr-8">
+    <div className=" relative p-2 mt-2 mr-2 px-5 bg-white rounded-full inline-flex items-center hover:bg-opacity-50 pr-8">
       <p
         className="outline-none "
-        contentEditable="true"
+        contentEditable={editable}
+        suppressContentEditableWarning={true}
         onKeyDown={handleTagEdit}
         onClick={addEditable}
       >
         {tag}
-        <button
-          className="mt-[2px] rounded-full absolute right-3 top-1/2-tranlatey-y-1/2 "
-          onClick={handleTagDelete}
-        >
-          <i className="fi fi-br-cross text-sm pointer-events-none"></i>
-        </button>
       </p>
+      <button className="mt-[2px] rounded-full ml-3 " onClick={handleTagDelete}>
+        <i className="fi fi-br-cross text-sm pointer-events-none"></i>
+      </button>
     </div>
   );
 };

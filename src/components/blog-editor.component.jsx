@@ -1,7 +1,11 @@
-import { Link, useNavigate } from "react-router-dom";
-import logo from "../imgs/logo.png";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import logo_light from "../imgs/logo-light.png";
+import logo_dark from "../imgs/logo-dark.png";
+
 import AnimationWrapper from "../common/page-animation";
-import defaultBanner from "../imgs/blog banner.png";
+import defaultBanner_light from "../imgs/blog banner light.png";
+import defaultBanner_dark from "../imgs/blog banner dark.png";
+
 import { uploadImage } from "../common/aws";
 import { useContext, useEffect, useRef } from "react";
 import { Toaster, toast } from "react-hot-toast";
@@ -9,11 +13,10 @@ import { EditorContext } from "../pages/editor.pages";
 import EditorJS from "@editorjs/editorjs";
 import { tools } from "./tools.component";
 import axios from "axios";
-import { UserContext } from "../App";
+import { ThemeContext, UserContext } from "../App";
 
 const BlogEditor = () => {
   let {
-    blog: { title, content, banner, tags, des },
     setBlog,
     blog,
     editorState,
@@ -22,11 +25,16 @@ const BlogEditor = () => {
     setTextEditor,
     Editor,
   } = useContext(EditorContext);
+  let { theme } = useContext(ThemeContext);
+  console.log(blog);
 
+  const { title, content, banner, tags, des } = blog;
   let {
     userAuth: { access_token },
   } = useContext(UserContext);
   let navigate = useNavigate();
+
+  let { blog_id } = useParams();
 
   //useEffect
   useEffect(() => {
@@ -34,7 +42,7 @@ const BlogEditor = () => {
       setTextEditor(
         new EditorJS({
           holderId: "textEditor",
-          data: content,
+          data: Array.isArray(content) ? content[0] : content,
           tools: tools,
           placeholder: "Let's write something nice here",
         })
@@ -76,7 +84,7 @@ const BlogEditor = () => {
   };
   const handleError = (e) => {
     let img = e.target;
-    img.src = defaultBanner;
+    img.src = theme == "light" ? defaultBanner_light : defaultBanner_dark;
   };
   const handlePublishEvent = (e) => {
     if (!banner.length) {
@@ -93,7 +101,7 @@ const BlogEditor = () => {
             setBlog({ ...blog, content: data });
             setEditorState("publish");
           } else {
-            return toast.error("Write somethign in your blog to publish it.");
+            return toast.error("Write somethings in your blog to publish it.");
           }
         })
         .catch((err) => console.log(err));
@@ -122,17 +130,21 @@ const BlogEditor = () => {
         };
 
         axios
-          .post(import.meta.env.VITE_SERVER_DOMAIN + "/create-blog", blogObj, {
-            headers: {
-              Authorization: `Bearer ${access_token}`,
-            },
-          })
+          .post(
+            import.meta.env.VITE_SERVER_DOMAIN + "/create-blog",
+            { ...blogObj, id: blog_id },
+            {
+              headers: {
+                Authorization: `Bearer ${access_token}`,
+              },
+            }
+          )
           .then(() => {
             e.target.classList.remove("disable");
             toast.dismiss(loadingToast);
             toast.success("Saved!");
             setTimeout(() => {
-              navigate("/");
+              navigate("/dashboard/blogs?tab=draft");
             }, 500);
           })
           .catch(({ response }) => {
@@ -148,7 +160,7 @@ const BlogEditor = () => {
     <>
       <nav className="navbar ">
         <Link to="/" className="flex-none w-10">
-          <img src={logo} alt="" />
+          <img src={theme == "light" ? logo_dark : logo_light} alt="" />
         </Link>
         <p className="max-md:hidden text-black line-clamp-1 w-full">
           {title.length ? title : "New Blog"}
@@ -182,7 +194,7 @@ const BlogEditor = () => {
             <textarea
               defaultValue={title}
               placeholder="Blog Title"
-              className="text-4xl font-medium w-full h-20 outline-none resize-none mt-10 leading-tight placeholder:opacity-40 "
+              className="text-4xl font-medium w-full h-20 bg-white outline-none resize-none mt-10 leading-tight placeholder:opacity-40 "
               onKeyDown={handleTitleKeyDown}
               onChange={handleTitleChange}
             ></textarea>

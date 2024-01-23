@@ -7,6 +7,9 @@ import { getDay } from "../common/date";
 import BlogInteraction from "../components/blog-interaction.component";
 import BlogPostCard from "../components/blog-post.component";
 import BlogContent from "../components/blog-content.component";
+import CommentContainer, {
+  fetchComments,
+} from "../components/comments.component";
 
 export const blogStructure = {
   title: "",
@@ -25,6 +28,9 @@ const BlogPage = () => {
   const [blog, setBlog] = useState(blogStructure);
   const [loading, setLoading] = useState(true);
   const [similarBlogs, setSimilarBlogs] = useState(null);
+  const [isLikedByUser, setIsLikedByUser] = useState(false);
+  const [commentsWrapper, setCommentsWrapper] = useState(true);
+  const [totalParentCommentsLoaded, setTotalParentCommentsLoaded] = useState(0);
 
   let {
     title,
@@ -42,9 +48,12 @@ const BlogPage = () => {
       .post(import.meta.env.VITE_SERVER_DOMAIN + "/get-blog", {
         blog_id,
       })
-      .then(({ data: { blog } }) => {
+      .then(async ({ data: { blog } }) => {
+        blog.comments = await fetchComments({
+          blog_id: blog._id,
+          setParentCommentCountFunc: setTotalParentCommentsLoaded,
+        });
         setBlog(blog);
-        console.log(blog);
         axios
           .post(import.meta.env.VITE_SERVER_DOMAIN + "/search-blogs", {
             tag: blog.tags[0],
@@ -53,7 +62,6 @@ const BlogPage = () => {
           })
           .then(({ data }) => {
             setSimilarBlogs(data.blogs);
-            console.log(data.blogs);
           });
         setLoading(false);
       })
@@ -71,6 +79,9 @@ const BlogPage = () => {
     setBlog(blogStructure);
     setLoading(true);
     setSimilarBlogs(null);
+    setIsLikedByUser(false);
+    setCommentsWrapper(false);
+    setTotalParentCommentsLoaded(0);
   };
 
   return (
@@ -78,7 +89,19 @@ const BlogPage = () => {
       {loading ? (
         <Loader />
       ) : (
-        <BlogContext.Provider value={{ blog, setBlog }}>
+        <BlogContext.Provider
+          value={{
+            blog,
+            setBlog,
+            isLikedByUser,
+            setIsLikedByUser,
+            commentsWrapper,
+            setCommentsWrapper,
+            totalParentCommentsLoaded,
+            setTotalParentCommentsLoaded,
+          }}
+        >
+          <CommentContainer />
           <div className="max-w-[900px] center py-10 max-lg:px-5[vw]">
             <img src={banner} className="aspect-video" alt="" />
             <div className="mt-12">
@@ -104,7 +127,7 @@ const BlogPage = () => {
             </div>
             <BlogInteraction />
             <div className="my-12 font-gelasio blog-page-content">
-              {content[0].blocks.map((block, i) => {
+              {content[0]?.blocks?.map((block, i) => {
                 return (
                   <div key={i} className="my-4 md:my-8">
                     <BlogContent block={block} />
