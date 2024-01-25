@@ -26,7 +26,6 @@ const BlogEditor = () => {
     Editor,
   } = useContext(EditorContext);
   let { theme } = useContext(ThemeContext);
-  console.log(blog);
 
   const { title, content, banner, tags, des } = blog;
   let {
@@ -159,7 +158,7 @@ const BlogEditor = () => {
   return (
     <>
       <nav className="navbar ">
-        <Link to="/" className="flex-none w-10">
+        <Link to="/" className="flex-none w-20">
           <img src={theme == "light" ? logo_dark : logo_light} alt="" />
         </Link>
         <p className="max-md:hidden text-black line-clamp-1 w-full">

@@ -151,7 +151,6 @@ const EditProfile = () => {
       })
       .catch(({ response }) => {
         toast.error(response.data.error);
-        console.log(response);
       });
     toast.dismiss(loadingToast);
     e.target.removeAttribute("disabled");

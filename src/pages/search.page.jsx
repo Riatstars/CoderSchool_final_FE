@@ -14,7 +14,6 @@ const SearchPage = () => {
   const { query } = useParams();
   let [blogs, setBlogs] = useState(null);
   let [users, setUsers] = useState(null);
-  console.log(users);
 
   const searchBlogs = ({ page = 1, create_new_arr = false }) => {
     axios

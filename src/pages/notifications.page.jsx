@@ -17,7 +17,6 @@ const Notification = () => {
     setUserAuth,
   } = useContext(UserContext);
   const [notifications, setNotifications] = useState(null);
-  console.log(notifications);
 
   const fetchNotifications = ({ page, deletedDocCount = 0 }) => {
     axios
@@ -35,7 +34,6 @@ const Notification = () => {
         }
       )
       .then(async ({ data: { notifications: data } }) => {
-        console.log(data);
         if (new_notification_available) {
           setUserAuth({ ...userAuth, new_notification_available: false });
         }
@@ -49,7 +47,6 @@ const Notification = () => {
         });
 
         setNotifications(formatedData);
-        console.log(formatedData);
       })
       .catch((err) => {
         console.log(err);

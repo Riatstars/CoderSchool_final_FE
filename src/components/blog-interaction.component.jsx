@@ -73,9 +73,7 @@ const BlogInteraction = () => {
             },
           }
         )
-        .then(({ data }) => {
-          console.log(data);
-        })
+        .then(({ data }) => {})
         .catch((err) => console.log(err));
     } else {
       toast.error("You must login first to like a blog");

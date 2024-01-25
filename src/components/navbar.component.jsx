@@ -52,15 +52,19 @@ const Navbar = () => {
 
   const handleSearch = (e) => {
     let query = e.target.value;
-    if (e.keyCode == 13 && query.length) {
-      navigate("/search/" + query);
+    if (e.keyCode == 13) {
+      if (query.length) {
+        navigate("/search/" + query);
+      } else {
+        navigate("/");
+      }
     }
   };
 
   return (
     <>
       <nav className="navbar z-50">
-        <Link to="/" className="flex-none w-10">
+        <Link to="/" className="flex-none w-20">
           <img
             src={theme == "light" ? darkLogo : lightLogo}
             className="w-full"

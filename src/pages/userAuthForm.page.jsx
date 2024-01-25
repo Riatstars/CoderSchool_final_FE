@@ -26,7 +26,6 @@ const UserAuthForm = ({ type }) => {
         toast.success("Success");
       })
       .catch(({ response }) => {
-        console.log(response);
         toast.error(response.data.error);
       });
   };

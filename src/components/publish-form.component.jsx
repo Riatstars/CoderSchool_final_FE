@@ -11,9 +11,10 @@ const PublishForm = () => {
   let characterLimit = 200;
   let tagLimit = 10;
 
-  let { blog_id } = useQuery();
+  // let { blog_id } = useQuery();
+
   let {
-    blog: { banner, title, tags, des, content },
+    blog: { banner, title, tags, des, content, blog_id },
     setBlog,
     blog,
     setEditorState,

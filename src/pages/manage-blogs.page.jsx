@@ -166,7 +166,7 @@ const ManageBlogs = () => {
                 fetchDataFunction={getBlogs}
                 additionalParam={{
                   draft: true,
-                  deletedDocCount: blogs.deletedDocCount,
+                  deletedDocCount: blogs?.deletedDocCount,
                 }}
               />
             </>

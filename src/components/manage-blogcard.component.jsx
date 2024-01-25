@@ -48,7 +48,7 @@ export const ManagePublishBlogsCard = ({ blog }) => {
         />
         <div className="flex flex-col justify-between py-2 w-full min-w-[300px]">
           <div>
-            <Link className="blog-title mb-4" to={"/blob/" + blog_id}>
+            <Link className="blog-title mb-4" to={"/blog/" + blog_id}>
               {title}
             </Link>
             <p className="line-clamp-1">Published on {getDay(publishedAt)}</p>

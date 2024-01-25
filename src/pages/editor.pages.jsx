@@ -23,7 +23,6 @@ const Editor = () => {
   const [editorState, setEditorState] = useState("editor");
   const [textEditor, setTextEditor] = useState({ isReady: false });
   const [loading, setLoading] = useState(true);
-  console.log(blog);
 
   useEffect(() => {
     if (!blog_id) {
