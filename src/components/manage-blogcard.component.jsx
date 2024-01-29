@@ -4,7 +4,7 @@ import { useContext, useState } from "react";
 import { UserContext } from "../App";
 import axios from "axios";
 
-const BlogStats = ({ stats }) => {
+export const BlogStats = ({ stats }) => {
   return (
     <div className="flex gap-2 max-lg:mb-6 max-lg:pb-6 border-grey max-lg:border-b">
       {Object.keys(stats).map((info, i) => {
@@ -105,7 +105,7 @@ export const ManageDraftsBlogCard = ({ blog }) => {
         <div>
           <h1 className="blog-title mb-3">{title}</h1>
           <p className="line-clamp-2 font-gelasio">
-            {des.length ? des : "No description yet"}
+            {des?.length ? des : "No description yet"}
           </p>
           <div className="flex gap-6 mt-3">
             <Link className="pr-4 py-2 underline" to={"/editor/" + blog_id}>

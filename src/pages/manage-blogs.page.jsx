@@ -13,10 +13,13 @@ import {
 } from "../components/manage-blogcard.component";
 import LoadMoreDataBtn from "../components/load-more.component";
 import { useSearchParams } from "react-router-dom";
+import LikedBlogsList from "../components/liked-blog-card.component";
+import LikedBlogCard from "../components/liked-blog-card.component";
 
 const ManageBlogs = () => {
   const [blogs, setBlogs] = useState(null);
   const [drafts, setDrafts] = useState(null);
+  const [likedBlogs, setLikedBlogs] = useState(null);
   const [query, setQuery] = useState("");
   const [activeTab, setActiveTab] = useState("publish");
   const searchParam = useSearchParams()[0];
@@ -58,6 +61,31 @@ const ManageBlogs = () => {
       });
   };
 
+  const getLikedBlogs = ({ page }) => {
+    axios
+      .post(
+        import.meta.env.VITE_SERVER_DOMAIN + "/liked-blogs",
+        {
+          page,
+        },
+        { headers: { Authorization: "Bearer " + access_token } }
+      )
+      .then(async ({ data }) => {
+        const formatedData = await filterPaginationData({
+          state: likedBlogs,
+          data: data.blogs,
+          page,
+          user: access_token,
+          countRoute: "/liked-blogs-count",
+        });
+
+        setLikedBlogs(formatedData);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const handleSearch = (e) => {
     let searchQuery = e.target.value;
 
@@ -85,8 +113,11 @@ const ManageBlogs = () => {
       if (drafts == null) {
         getBlogs({ page: 1, draft: true });
       }
+      if (likedBlogs == null) {
+        getLikedBlogs({ page: 1 });
+      }
     }
-  }, [access_token, blogs, drafts]);
+  }, [access_token, blogs, drafts, likedBlogs]);
 
   return (
     <>
@@ -103,7 +134,7 @@ const ManageBlogs = () => {
         <i className="fi fi-rr-search-alt absolute right-[10%] md:pointer-events-none md:left-5 top-1/2 -translate-y-1/2 text-xl text-dark-grey"></i>
       </div>
       <InPageNavigation
-        routes={["Published Blogs", "Drafts"]}
+        routes={["Published Blogs", "Drafts", "Liked Blogs"]}
         defaulActiveIndex={activeTab == "draft" ? 1 : 0}
       >
         <div>
@@ -168,6 +199,35 @@ const ManageBlogs = () => {
                   draft: true,
                   deletedDocCount: blogs?.deletedDocCount,
                 }}
+              />
+            </>
+          )}
+        </div>
+        <div>
+          {likedBlogs == null ? (
+            <Loader />
+          ) : (
+            <>
+              {likedBlogs.results?.length ? (
+                likedBlogs.results?.map((likedBlog, i) => {
+                  return (
+                    <AnimationWrapper key={i} transition={{ delay: i * 0.04 }}>
+                      <LikedBlogCard
+                        blog={{
+                          ...likedBlog,
+                          index: i,
+                          setStateFunc: setLikedBlogs,
+                        }}
+                      />
+                    </AnimationWrapper>
+                  );
+                })
+              ) : (
+                <NoDataMessage message={"Nothing to show here!"} />
+              )}
+              <LoadMoreDataBtn
+                state={likedBlogs}
+                fetchDataFunction={getLikedBlogs}
               />
             </>
           )}
