@@ -1,7 +1,7 @@
 import axios from "axios";
 import AnimationWrapper from "../common/page-animation";
 import InPageNavigation from "../components/inpage-navigation.component";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import BlogPostCard from "../components/blog-post.component";
 import Loader from "../components/loader.component";
 import MinimalBlogPost from "../components/nobanner-blog-post.component";
@@ -9,6 +9,7 @@ import { activeTabRef } from "../components/inpage-navigation.component";
 import NoDataMessage from "../components/nodata.component";
 import filterPaginationData from "../common/filter-pagination-data";
 import LoadMoreDataBtn from "../components/load-more.component";
+import { UserContext } from "../App";
 
 const HomePage = () => {
   let [blogs, setBlogs] = useState(null);
@@ -25,9 +26,22 @@ const HomePage = () => {
     "123",
   ];
 
+  let {
+    userAuth: { access_token },
+  } = useContext(UserContext);
+
   const fetchLatestBlogs = ({ page = 1 }) => {
+    console.log(access_token);
     axios
-      .post(import.meta.env.VITE_SERVER_DOMAIN + "/latest-blogs", { page })
+      .post(
+        import.meta.env.VITE_SERVER_DOMAIN +
+          "/latest-blogs" +
+          (access_token ? "-with-auth" : ""),
+        { page },
+        access_token
+          ? { headers: { Authorization: "Bearer " + access_token } }
+          : {}
+      )
       .then(async ({ data }) => {
         // setBlogs(data.blogs);
         let formatedData = await filterPaginationData({
@@ -88,14 +102,16 @@ const HomePage = () => {
   useEffect(() => {
     activeTabRef.current.click();
     if (pageState == "home") {
+      setBlogs(null);
       fetchLatestBlogs({ page: 1 });
     } else {
+      setBlogs(null);
       fetchBlogsByCategory({ page: 1 });
     }
     if (!trendingBlogs) {
       fetchTrendingBlogs();
     }
-  }, [pageState]);
+  }, [pageState, access_token]);
 
   return (
     <AnimationWrapper>

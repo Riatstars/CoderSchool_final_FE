@@ -30,10 +30,15 @@ export const profileDataStructure = {
 const ProfilePage = () => {
   const { id: profileId } = useParams();
 
+  let {
+    userAuth: { username, access_token },
+  } = useContext(UserContext);
+
   const [profile, setProfile] = useState(profileDataStructure);
   const [loading, setLoading] = useState(true);
   const [blogs, setBlogs] = useState(null);
   const [profileLoaded, setProfileLoaded] = useState("");
+  const [follow, setFollow] = useState(null);
 
   let {
     personal_info: { username: profile_username, fullname, profile_img, bio },
@@ -41,10 +46,6 @@ const ProfilePage = () => {
     social_links,
     joinedAt,
   } = profile;
-
-  let {
-    userAuth: { username },
-  } = useContext(UserContext);
 
   const fetchUserProfile = () => {
     axios
@@ -90,6 +91,45 @@ const ProfilePage = () => {
       });
   };
 
+  const fetchFollow = ({ target }) => {
+    axios
+      .post(
+        import.meta.env.VITE_SERVER_DOMAIN + "/check-follow",
+        {
+          target,
+        },
+        { headers: { Authorization: "Bearer " + access_token } }
+      )
+      .then(({ data }) => {
+        setFollow(data.status);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const updateFollow = (status) => {
+    axios
+      .post(
+        import.meta.env.VITE_SERVER_DOMAIN + "/update-follow",
+        {
+          target: profile._id,
+          status,
+        },
+        { headers: { Authorization: "Bearer " + access_token } }
+      )
+      .then(({ data }) => {
+        setFollow(data.status);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleFollowClick = (action) => {
+    if (action == "follow") {
+      updateFollow(true);
+    } else {
+      updateFollow(false);
+    }
+  };
+
   useEffect(() => {
     if (profileId !== profileLoaded) {
       setBlogs(null);
@@ -98,7 +138,12 @@ const ProfilePage = () => {
       resetState();
       fetchUserProfile();
     }
-  }, [profileId, blogs]);
+    if (profileId !== username) {
+      setLoading(true);
+      fetchFollow({ target: profileId });
+      setLoading(false);
+    }
+  }, [profileId, blogs, follow]);
 
   const resetState = () => {
     setProfile(profileDataStructure);
@@ -118,8 +163,26 @@ const ProfilePage = () => {
               className="w-48 h-48 bg-grey rounded-full md:w-32 md:h-32"
               alt=""
             />
-            <h1 className="text-2xl font-medium">@{profile_username}</h1>
+            <h1 className="text-2xl font-medium">@{profile_username} </h1>
             <p className="text-xl capitalize h-6">{fullname}</p>
+            {follow == null ? (
+              <Loader />
+            ) : follow ? (
+              <button
+                onClick={() => handleFollowClick("unfollow")}
+                className="btn-light"
+              >
+                Unfollow
+              </button>
+            ) : (
+              <button
+                onClick={() => handleFollowClick("follow")}
+                className="btn-dark"
+              >
+                Follow
+              </button>
+            )}
+
             <p>
               {total_posts.toLocaleString()} Blogs -{" "}
               {total_reads.toLocaleString()} Reads

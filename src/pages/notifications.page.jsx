@@ -7,6 +7,7 @@ import NotificationCard from "../components/notification-card.component.jsx";
 import AnimationWrapper from "../common/page-animation.jsx";
 import NoDataMessage from "../components/nodata.component.jsx";
 import LoadMoreDataBtn from "../components/load-more.component.jsx";
+import FollowNotiCard from "../components/follow-noti-card.component.jsx";
 
 const Notification = () => {
   const [filter, setFilter] = useState("all");
@@ -17,6 +18,7 @@ const Notification = () => {
     setUserAuth,
   } = useContext(UserContext);
   const [notifications, setNotifications] = useState(null);
+  console.log(notifications);
 
   const fetchNotifications = ({ page, deletedDocCount = 0 }) => {
     axios
@@ -88,15 +90,23 @@ const Notification = () => {
           <Loader />
         ) : (
           <>
-            {notifications.results.length ? (
-              notifications.results.map((notification, i) => {
+            {notifications?.results?.length ? (
+              notifications?.results?.map((notification, i) => {
                 return (
                   <AnimationWrapper key={i} transition={{ delay: i * 0.08 }}>
-                    <NotificationCard
-                      data={notification}
-                      index={i}
-                      notificationState={{ notifications, setNotifications }}
-                    />
+                    {notification.blog ? (
+                      <NotificationCard
+                        data={notification}
+                        index={i}
+                        notificationState={{ notifications, setNotifications }}
+                      />
+                    ) : (
+                      <FollowNotiCard
+                        data={notification}
+                        index={i}
+                        notificationState={{ notifications, setNotifications }}
+                      />
+                    )}
                   </AnimationWrapper>
                 );
               })

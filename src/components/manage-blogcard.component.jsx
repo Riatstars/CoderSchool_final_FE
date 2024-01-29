@@ -155,5 +155,5 @@ const deleteBlog = (blog, access_token, target) => {
         };
       });
     })
-    .catch((err) => console.log.log(err));
+    .catch((err) => console.log(err));
 };

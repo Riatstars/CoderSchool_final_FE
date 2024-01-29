@@ -76,6 +76,14 @@ const SideNav = () => {
                 Blogs
               </NavLink>
               <NavLink
+                to="/dashboard/follow"
+                onClick={(e) => setPageState(e.target.innerText)}
+                className="sidebar-link"
+              >
+                <i className="fi fi-rr-following"></i>
+                Follow
+              </NavLink>
+              <NavLink
                 to="/dashboard/notifications"
                 onClick={(e) => setPageState(e.target.innerText)}
                 className="sidebar-link"

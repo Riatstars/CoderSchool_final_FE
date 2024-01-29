@@ -68,7 +68,7 @@ const SearchPage = () => {
                 key={i}
                 transition={{ duration: 1, delay: i * 0.08 }}
               >
-                <UserCard user={user} />;
+                <UserCard user={user} />
               </AnimationWrapper>
             );
           })
