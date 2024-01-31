@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import CommentField from "./comment-field.component";
 import { BlogContext } from "../pages/blog.page";
 import axios from "axios";
+import EditCommentField from "./edit-comment-field.component";
 
 const CommentCard = ({ commentData, index, leftVal }) => {
   let {
@@ -12,7 +13,7 @@ const CommentCard = ({ commentData, index, leftVal }) => {
       personal_info: { profile_img, fullname, username: commented_by_username },
     },
     commentedAt,
-    comment,
+    comment: commentContent,
     _id,
     children,
   } = commentData;
@@ -35,7 +36,11 @@ const CommentCard = ({ commentData, index, leftVal }) => {
     setBlog,
     setTotalParentCommentsLoaded,
   } = useContext(BlogContext);
+
+  const [comment, setComment] = useState(commentContent);
   const [isReplying, setIsReplying] = useState(false);
+  const [isEditting, setIsEditting] = useState(false);
+
   const getParentIndex = () => {
     let startingPoint = index - 1;
     try {
@@ -94,7 +99,16 @@ const CommentCard = ({ commentData, index, leftVal }) => {
       return toast.error("Log in first to reply");
     }
     setIsReplying((state) => !state);
+    setIsEditting(false);
   };
+  const handleEdit = () => {
+    if (!access_token) {
+      return toast.error("Log in first to edit");
+    }
+    setIsEditting((state) => !state);
+    setIsReplying(false);
+  };
+
   const loadReply = ({ skip = 0, currentIndex = index }) => {
     if (commentsArr[currentIndex].children.length) {
       hideReply();
@@ -205,12 +219,17 @@ const CommentCard = ({ commentData, index, leftVal }) => {
             Reply
           </button>
           {username == commented_by_username || username == blog_author ? (
-            <button
-              onClick={deleteComment}
-              className="p-2 px-3 rounded-md border border-grey ml-auto hover:bg-red/3 hover:text-red flex items-center"
-            >
-              <i className="fi fi-rs-trash pointer-events-none"></i>
-            </button>
+            <>
+              <button className="underline" onClick={handleEdit}>
+                Edit
+              </button>
+              <button
+                onClick={deleteComment}
+                className="p-2 px-3 rounded-md border border-grey ml-auto hover:bg-red/3 hover:text-red flex items-center"
+              >
+                <i className="fi fi-rs-trash pointer-events-none"></i>
+              </button>
+            </>
           ) : (
             ""
           )}
@@ -222,6 +241,20 @@ const CommentCard = ({ commentData, index, leftVal }) => {
               index={index}
               replyingTo={_id}
               setIsReplying={setIsReplying}
+            />
+          </div>
+        ) : (
+          ""
+        )}
+        {isEditting ? (
+          <div className="mt-8">
+            <EditCommentField
+              commentData={commentData}
+              action="edit"
+              index={index}
+              replyingTo={_id}
+              setIsEditting={setIsEditting}
+              setComment={setComment}
             />
           </div>
         ) : (
