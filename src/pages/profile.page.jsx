@@ -21,7 +21,7 @@ export const profileDataStructure = {
   },
   account_info: {
     total_posts: 0,
-    total_blogs: 0,
+    total_reads: 0,
   },
   social_links: {},
   joinedAt: "",
@@ -29,7 +29,6 @@ export const profileDataStructure = {
 
 const ProfilePage = () => {
   const { id: profileId } = useParams();
-
   let {
     userAuth: { username, access_token },
   } = useContext(UserContext);
@@ -39,6 +38,8 @@ const ProfilePage = () => {
   const [blogs, setBlogs] = useState(null);
   const [profileLoaded, setProfileLoaded] = useState("");
   const [follow, setFollow] = useState(null);
+  const [followings, setFollowings] = useState(0);
+  const [followers, setFollowers] = useState(0);
 
   let {
     personal_info: { username: profile_username, fullname, profile_img, bio },
@@ -61,6 +62,10 @@ const ProfilePage = () => {
         setLoading(false);
       })
       .catch((err) => {
+        setProfile({
+          ...profile,
+          personal_info: { ...profile.personal_info, username: null },
+        });
         console.log(err);
         setLoading(false);
       });
@@ -121,6 +126,34 @@ const ProfilePage = () => {
       })
       .catch((err) => console.log(err));
   };
+  const fetchFollowingsInfo = ({ user_id }) => {
+    axios
+      .post(
+        import.meta.env.VITE_SERVER_DOMAIN + "/all-followings-count",
+        {
+          user_id,
+        },
+        { headers: { Authorization: "Bearer " + access_token } }
+      )
+      .then(({ data }) => {
+        setFollowings(data.totalDocs);
+      })
+      .catch((err) => console.log(err));
+  };
+  const fetchFollowersInfo = ({ user_id }) => {
+    axios
+      .post(
+        import.meta.env.VITE_SERVER_DOMAIN + "/all-followers-count",
+        {
+          user_id,
+        },
+        { headers: { Authorization: "Bearer " + access_token } }
+      )
+      .then(({ data }) => {
+        setFollowers(data.totalDocs);
+      })
+      .catch((err) => console.log(err));
+  };
 
   const handleFollowClick = (action) => {
     if (action == "follow") {
@@ -137,12 +170,14 @@ const ProfilePage = () => {
     if (blogs == null) {
       resetState();
       fetchUserProfile();
+      fetchFollowingsInfo({ user_id: profile._id });
+      fetchFollowersInfo({ user_id: profile._id });
     }
     if (profileId !== username) {
       setLoading(true);
       fetchFollow({ target: profileId });
-      setLoading(false);
     }
+    setLoading(false);
   }, [profileId, blogs, follow]);
 
   const resetState = () => {
@@ -155,7 +190,7 @@ const ProfilePage = () => {
     <AnimationWrapper>
       {loading ? (
         <Loader />
-      ) : profile_username.length ? (
+      ) : profile_username !== null ? (
         <section className="h-cover md:flex flex-row-reverse items-start gap-5 min-[1100px]:gap-12">
           <div className="flex flex-col gap-5 max-md:items-center min-w-[250px] md:pl-8 md:border-l border-grey md:sticky md:top-[100px] md:py-10">
             <img
@@ -165,8 +200,8 @@ const ProfilePage = () => {
             />
             <h1 className="text-2xl font-medium">@{profile_username} </h1>
             <p className="text-xl capitalize h-6">{fullname}</p>
-            {follow == null ? (
-              <Loader />
+            {profile_username == username ? (
+              ""
             ) : follow ? (
               <button
                 onClick={() => handleFollowClick("unfollow")}
@@ -187,11 +222,15 @@ const ProfilePage = () => {
               {total_posts.toLocaleString()} Blogs -{" "}
               {total_reads.toLocaleString()} Reads
             </p>
+            <p>
+              {followings.toLocaleString()} Followings -{" "}
+              {followers.toLocaleString()} Followers
+            </p>
 
             <div className="flex gap-4 mt-2">
               {profileId == username ? (
                 <Link
-                  to="/setting/edit-profile"
+                  to="/settings/edit-profile"
                   className="btn-light rounded-md"
                 >
                   Edit profile

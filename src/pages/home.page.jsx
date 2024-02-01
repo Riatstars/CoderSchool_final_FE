@@ -31,7 +31,6 @@ const HomePage = () => {
   } = useContext(UserContext);
 
   const fetchLatestBlogs = ({ page = 1 }) => {
-    console.log(access_token);
     axios
       .post(
         import.meta.env.VITE_SERVER_DOMAIN +
