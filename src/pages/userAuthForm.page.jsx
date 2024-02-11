@@ -33,7 +33,6 @@ const UserAuthForm = ({ type }) => {
     e.preventDefault();
     authWithGoogle()
       .then((user) => {
-        console.log(user);
         let serverRoute = "/google-auth";
         let formData = {
           access_token: user.accessToken,

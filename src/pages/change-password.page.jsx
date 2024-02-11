@@ -4,12 +4,16 @@ import InputBox from "../components/input.component";
 import { toast, Toaster } from "react-hot-toast";
 import axios from "axios";
 import { UserContext } from "../App";
+import { useNavigate } from "react-router-dom";
+import { removeFromSession } from "../common/session";
 
 const ChangePassword = () => {
   let changePasswordForm = useRef();
   let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; //
+  const navigate = useNavigate();
   let {
     userAuth: { access_token },
+    setUserAuth,
   } = useContext(UserContext);
 
   const handleSubmit = (e) => {
@@ -40,10 +44,13 @@ const ChangePassword = () => {
           Authorization: "Bearer " + access_token,
         },
       })
-      .then(() => {
+      .then(async () => {
         toast.dismiss(LoadingToast);
         e.target.removeAttribute("disabled");
+        removeFromSession("user");
         toast.success("Password changed");
+        await setUserAuth({ access_token: null });
+        navigate("/signin");
       })
       .catch(({ response }) => {
         toast.dismiss(LoadingToast);

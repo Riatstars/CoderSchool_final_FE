@@ -69,6 +69,7 @@ const CommentField = ({
         } else {
           data.childrenLevel = 0;
           newCommentArr = [data, ...commentsArr];
+          console.log(newCommentArr);
         }
 
         let parentCommentIncrementVal = replyingTo ? 0 : 1;
