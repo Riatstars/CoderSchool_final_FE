@@ -48,7 +48,7 @@ const ProfilePage = () => {
     joinedAt,
   } = profile;
 
-  const fetchUserProfile = () => {
+  const fetchUserProfile = (profileId) => {
     axios
       .post(import.meta.env.VITE_SERVER_DOMAIN + "/get-profile", {
         username: profileId,
@@ -59,6 +59,8 @@ const ProfilePage = () => {
         }
         setProfileLoaded(profileId);
         getBlogs({ user_id: user._id });
+        fetchFollowingsInfo({ user_id: user._id });
+        fetchFollowersInfo({ user_id: user._id });
         setLoading(false);
       })
       .catch((err) => {
@@ -164,18 +166,16 @@ const ProfilePage = () => {
   };
 
   useEffect(() => {
+    setLoading(true);
     if (profileId !== profileLoaded) {
       setBlogs(null);
     }
+    if (profileId !== username && access_token) {
+      fetchFollow({ target: profileId });
+    }
     if (blogs == null) {
       resetState();
-      fetchUserProfile();
-      fetchFollowingsInfo({ user_id: profile._id });
-      fetchFollowersInfo({ user_id: profile._id });
-    }
-    if (profileId !== username) {
-      setLoading(true);
-      fetchFollow({ target: profileId });
+      fetchUserProfile(profileId);
     }
     setLoading(false);
   }, [profileId, blogs, follow]);
@@ -200,8 +200,10 @@ const ProfilePage = () => {
             />
             <h1 className="text-2xl font-medium">@{profile_username} </h1>
             <p className="text-xl capitalize h-6">{fullname}</p>
-            {profile_username == username ? (
+            {profile_username == username || !access_token ? (
               ""
+            ) : follow == null ? (
+              <Loader />
             ) : follow ? (
               <button
                 onClick={() => handleFollowClick("unfollow")}
@@ -228,15 +230,13 @@ const ProfilePage = () => {
             </p>
 
             <div className="flex gap-4 mt-2">
-              {profileId == username ? (
+              {profileId == username && (
                 <Link
                   to="/settings/edit-profile"
                   className="btn-light rounded-md"
                 >
                   Edit profile
                 </Link>
-              ) : (
-                ""
               )}
             </div>
 

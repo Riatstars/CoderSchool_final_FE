@@ -107,15 +107,13 @@ const BlogInteraction = () => {
           <p className="text-xl text-dark-grey">{total_comments}</p>
         </div>
         <div className="flex gap-6 items-center">
-          {username == author_username ? (
+          {username == author_username && (
             <Link
               to={"/editor/" + blog_id}
               className="underline hover:text-purple"
             >
               Edit
             </Link>
-          ) : (
-            ""
           )}
           <Link
             to={`http://twitter.com/intent/tweet?text=Read ${title}&url=${location.href}`}

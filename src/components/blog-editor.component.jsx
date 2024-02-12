@@ -14,6 +14,7 @@ import EditorJS from "@editorjs/editorjs";
 import { tools } from "./tools.component";
 import axios from "axios";
 import { ThemeContext, UserContext } from "../App";
+import { blogStructure } from "../pages/blog.page";
 
 const BlogEditor = () => {
   let {
@@ -26,7 +27,9 @@ const BlogEditor = () => {
     Editor,
   } = useContext(EditorContext);
   let { theme } = useContext(ThemeContext);
-
+  if (!blog) {
+    setBlog(blogStructure);
+  }
   const { title, content, banner, tags, des } = blog;
   let {
     userAuth: { access_token },

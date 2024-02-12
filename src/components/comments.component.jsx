@@ -49,7 +49,6 @@ const CommentContainer = () => {
     totalParentCommentsLoaded,
     setTotalParentCommentsLoaded,
   } = useContext(BlogContext);
-  console.log(blog.comments);
 
   const loadMoreComments = async () => {
     let newCommentArr = await fetchComments({

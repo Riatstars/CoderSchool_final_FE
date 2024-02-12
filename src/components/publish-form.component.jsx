@@ -57,9 +57,12 @@ const PublishForm = () => {
     }
   };
   const publishBlog = (e) => {
-    if (e.target.className.includes("disable")) {
+    if (e.target.className.includes("disabled")) {
       return;
     }
+    e.target.classList.remove("disabled");
+    e.target.setAttribute("disabled", true);
+
     if (!title.length) {
       return toast.error("Write blog title before publishing");
     }
@@ -73,7 +76,6 @@ const PublishForm = () => {
     }
 
     let loadingToast = toast.loading("Publishing...");
-    e.target.classList.add("disable");
 
     let blogObj = {
       title,
@@ -103,7 +105,8 @@ const PublishForm = () => {
         }, 500);
       })
       .catch(({ response }) => {
-        e.target.classList.remove("disable");
+        e.target.classList.remove("disabled");
+        e.target.setAttribute("disabled", false);
         toast.dismiss(loadingToast);
         return toast.error(response.data.error);
       });

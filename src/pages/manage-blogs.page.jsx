@@ -30,7 +30,7 @@ const ManageBlogs = () => {
 
   const getBlogs = ({ page, draft, deletedDocCount }) => {
     axios
-      .post(
+      .get(
         import.meta.env.VITE_SERVER_DOMAIN + "/user-written-blogs",
         {
           page,
