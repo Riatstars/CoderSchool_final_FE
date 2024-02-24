@@ -17,6 +17,5 @@ export const uploadImage = async (img) => {
     .catch((err) => {
       console.log(err);
     });
-
   return imgUrl;
 };

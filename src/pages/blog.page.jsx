@@ -52,12 +52,21 @@ const BlogPage = () => {
           setParentCommentCountFunc: setTotalParentCommentsLoaded,
         });
         setBlog(blog);
+        let data_to_send = {
+          tag: blog.tags[0],
+          limit: 6,
+          eliminate_blog: blog_id,
+        };
+        let dataKeys = Object.keys(data_to_send);
         axios
-          .post(import.meta.env.VITE_SERVER_DOMAIN + "/search-blogs", {
-            tag: blog.tags[0],
-            limit: 6,
-            eliminate_blog: blog_id,
-          })
+          .get(
+            import.meta.env.VITE_SERVER_DOMAIN +
+              "/search-blogs" +
+              "?" +
+              dataKeys.reduce((accummulator, key) => {
+                return accummulator + key + "=" + data_to_send[key] + "&";
+              }, "")
+          )
           .then(({ data }) => {
             setSimilarBlogs(data.blogs);
           });

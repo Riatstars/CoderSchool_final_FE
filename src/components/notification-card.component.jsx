@@ -43,12 +43,10 @@ const NotificationCard = ({ data, index, notificationState }) => {
   const handleDelete = (comment_id, type, target) => {
     target.setAttribute("disabled", true);
     axios
-      .post(
-        import.meta.env.VITE_SERVER_DOMAIN + "/delete-comment",
-        {
-          _id:
-            type == "comment" ? comment_id : type == "reply" ? reply._id : "",
-        },
+      .delete(
+        import.meta.env.VITE_SERVER_DOMAIN +
+          "/delete-comment/" +
+          (type == "comment" ? comment_id : type == "reply" ? reply._id : ""),
         {
           headers: { Authorization: "Bearer " + access_token },
         }

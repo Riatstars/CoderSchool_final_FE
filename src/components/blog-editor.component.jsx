@@ -7,7 +7,7 @@ import defaultBanner_light from "../imgs/blog banner light.png";
 import defaultBanner_dark from "../imgs/blog banner dark.png";
 
 import { uploadImage } from "../common/aws";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect } from "react";
 import { Toaster, toast } from "react-hot-toast";
 import { EditorContext } from "../pages/editor.pages";
 import EditorJS from "@editorjs/editorjs";

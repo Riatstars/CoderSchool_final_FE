@@ -24,7 +24,7 @@ const EditCommentField = ({
     }
 
     axios
-      .post(
+      .put(
         import.meta.env.VITE_SERVER_DOMAIN + "/edit-comment",
         {
           _id: commentData._id,

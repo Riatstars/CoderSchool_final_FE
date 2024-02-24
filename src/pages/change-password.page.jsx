@@ -39,7 +39,7 @@ const ChangePassword = () => {
     e.target.setAttribute("disabled", true);
     let LoadingToast = toast.loading("Updating");
     axios
-      .post(import.meta.env.VITE_SERVER_DOMAIN + "/change-password", formData, {
+      .put(import.meta.env.VITE_SERVER_DOMAIN + "/change-password", formData, {
         headers: {
           Authorization: "Bearer " + access_token,
         },

@@ -50,9 +50,11 @@ const ProfilePage = () => {
 
   const fetchUserProfile = (profileId) => {
     axios
-      .post(import.meta.env.VITE_SERVER_DOMAIN + "/get-profile", {
-        username: profileId,
-      })
+      .get(
+        import.meta.env.VITE_SERVER_DOMAIN +
+          "/get-profile?username=" +
+          profileId
+      )
       .then(({ data: user }) => {
         if (user !== null) {
           setProfile(user);

@@ -44,7 +44,7 @@ const SearchPage = () => {
 
   const fetchUsers = () => {
     axios
-      .post(import.meta.env.VITE_SERVER_DOMAIN + "/search-users", { query })
+      .get(import.meta.env.VITE_SERVER_DOMAIN + "/search-users?query=" + query)
       .then(({ data: { users } }) => {
         setUsers(users);
       });

@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "../App";
-import axios, { Axios } from "axios";
+import axios from "axios";
 import { profileDataStructure } from "./profile.page";
 import AnimationWrapper from "../common/page-animation";
 import Loader from "../components/loader.component";
@@ -31,15 +31,18 @@ const EditProfile = () => {
       email,
       bio,
     },
+    personal_info,
     social_links,
   } = profile;
 
   useEffect(() => {
     if (access_token) {
       axios
-        .post(import.meta.env.VITE_SERVER_DOMAIN + "/get-profile", {
-          username: userAuth.username,
-        })
+        .get(
+          import.meta.env.VITE_SERVER_DOMAIN +
+            "/get-profile?username=" +
+            userAuth.username
+        )
         .then(({ data }) => {
           setProfile(data);
           setLoading(false);
@@ -53,6 +56,10 @@ const EditProfile = () => {
     if (charactersLeft == 0) {
       return;
     }
+    setProfile({
+      ...profile,
+      personal_info: { ...personal_info, bio: e.target.value },
+    });
   };
   const handleImagePreview = (e) => {
     let img = e.target.files[0];
@@ -68,7 +75,7 @@ const EditProfile = () => {
         .then((url) => {
           if (url) {
             axios
-              .post(
+              .put(
                 import.meta.env.VITE_SERVER_DOMAIN + "/update-profile-img",
                 {
                   url,
@@ -123,7 +130,7 @@ const EditProfile = () => {
     let loadingToast = toast.loading("Updating");
     e.target.setAttribute("disabled", true);
     axios
-      .post(
+      .put(
         import.meta.env.VITE_SERVER_DOMAIN + "/update-profile",
         {
           username,
@@ -146,8 +153,8 @@ const EditProfile = () => {
           let newUserAuth = { ...userAuth, username: data.username };
           storeInSession("user", JSON.stringify(newUserAuth));
           setUserAuth(newUserAuth);
-          toast.success("Profile updated");
         }
+        toast.success("Profile updated");
       })
       .catch(({ response }) => {
         toast.error(response.data.error);
