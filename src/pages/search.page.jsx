@@ -17,10 +17,14 @@ const SearchPage = () => {
 
   const searchBlogs = ({ page = 1, create_new_arr = false }) => {
     axios
-      .post(import.meta.env.VITE_SERVER_DOMAIN + "/search-blogs", {
-        query,
-        page,
-      })
+      .get(
+        import.meta.env.VITE_SERVER_DOMAIN +
+          "/search-blogs?" +
+          "query=" +
+          query +
+          "&page=" +
+          page
+      )
       .then(async ({ data }) => {
         // setBlogs(data.blogs);
         let formatedData = await filterPaginationData({

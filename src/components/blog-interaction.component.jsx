@@ -28,22 +28,18 @@ const BlogInteraction = () => {
 
   let {
     userAuth: { username, access_token },
+    userAuth,
   } = useContext(UserContext);
+  console.log(userAuth);
 
   useEffect(() => {
     if (access_token) {
       axios
-        .post(
-          import.meta.env.VITE_SERVER_DOMAIN + "/isliked-by-user",
-          {
-            _id,
+        .get(import.meta.env.VITE_SERVER_DOMAIN + "/isliked-by-user/" + _id, {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${access_token}`,
-            },
-          }
-        )
+        })
         .then(({ data: { result } }) => {
           setIsLikedByUser(Boolean(result));
         })

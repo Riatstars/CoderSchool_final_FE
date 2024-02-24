@@ -20,10 +20,15 @@ const filterPaginationData = async ({
   if (state !== null && !create_new_arr) {
     obj = { ...state, results: [...state?.results, ...data], page: page };
   } else {
+    let dataKeys = Object.keys(data_to_send);
     await axios
-      .post(
-        import.meta.env.VITE_SERVER_DOMAIN + countRoute,
-        data_to_send,
+      .get(
+        import.meta.env.VITE_SERVER_DOMAIN +
+          countRoute +
+          "?" +
+          dataKeys.reduce((accummulator, key) => {
+            return accummulator + key + "=" + data_to_send[key] + "&";
+          }, ""),
         headers
       )
       .then(({ data: { totalDocs } }) => {

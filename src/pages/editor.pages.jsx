@@ -24,17 +24,23 @@ const Editor = () => {
   const [textEditor, setTextEditor] = useState({ isReady: false });
   const [loading, setLoading] = useState(true);
 
+  let {
+    userAuth: { access_token, isAdmin },
+  } = useContext(UserContext);
+
   useEffect(() => {
     if (!blog_id) {
       return setLoading(false);
     }
 
     axios
-      .post(import.meta.env.VITE_SERVER_DOMAIN + "/get-blog", {
-        blog_id,
-        draft: true,
-        mode: "edit",
-      })
+      .get(
+        import.meta.env.VITE_SERVER_DOMAIN +
+          "/get-blog/" +
+          blog_id +
+          "?draft=true" +
+          "&mode=edit"
+      )
       .then(({ data: { blog } }) => {
         setBlog(blog);
         setLoading(false);
@@ -43,11 +49,7 @@ const Editor = () => {
         setBlog(null);
         setLoading(false);
       });
-  }, []);
-
-  let {
-    userAuth: { access_token, isAdmin },
-  } = useContext(UserContext);
+  }, [blog_id]);
 
   return (
     <EditorContext.Provider

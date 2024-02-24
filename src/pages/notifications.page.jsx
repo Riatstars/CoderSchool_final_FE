@@ -18,17 +18,22 @@ const Notification = () => {
     setUserAuth,
   } = useContext(UserContext);
   const [notifications, setNotifications] = useState(null);
-  console.log(notifications);
 
   const fetchNotifications = ({ page, deletedDocCount = 0 }) => {
+    let data_to_send = {
+      page,
+      filter,
+      deletedDocCount,
+    };
+    let dataKeys = Object.keys(data_to_send);
     axios
-      .post(
-        import.meta.env.VITE_SERVER_DOMAIN + "/notifications",
-        {
-          page,
-          filter,
-          deletedDocCount,
-        },
+      .get(
+        import.meta.env.VITE_SERVER_DOMAIN +
+          "/notifications" +
+          "?" +
+          dataKeys.reduce((accummulator, key) => {
+            return accummulator + key + "=" + data_to_send[key] + "&";
+          }, ""),
         {
           headers: {
             Authorization: "Bearer " + access_token,

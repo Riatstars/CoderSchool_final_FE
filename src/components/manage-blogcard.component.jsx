@@ -128,15 +128,9 @@ const deleteBlog = (blog, access_token, target) => {
   let { index, blog_id, setStateFunc } = blog;
   target.setAttribute("disabled", true);
   axios
-    .post(
-      import.meta.env.VITE_SERVER_DOMAIN + "/delete-blog",
-      {
-        blog_id,
-      },
-      {
-        headers: { Authorization: "Bearer " + access_token },
-      }
-    )
+    .delete(import.meta.env.VITE_SERVER_DOMAIN + "/delete-blog/" + blog_id, {
+      headers: { Authorization: "Bearer " + access_token },
+    })
     .then(({ data }) => {
       target.removeAttribute("disabled");
       setStateFunc((prev) => {

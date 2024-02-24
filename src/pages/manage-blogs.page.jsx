@@ -13,7 +13,7 @@ import {
 } from "../components/manage-blogcard.component";
 import LoadMoreDataBtn from "../components/load-more.component";
 import { useSearchParams } from "react-router-dom";
-import LikedBlogsList from "../components/liked-blog-card.component";
+
 import LikedBlogCard from "../components/liked-blog-card.component";
 
 const ManageBlogs = () => {
@@ -28,16 +28,16 @@ const ManageBlogs = () => {
     userAuth: { access_token },
   } = useContext(UserContext);
 
-  const getBlogs = ({ page, draft, deletedDocCount }) => {
+  const getBlogs = ({ page, draft, deletedDocCount = 0 }) => {
+    let data_to_send = { page, draft, deletedDocCount, query };
+    let dataKeys = Object.keys(data_to_send);
     axios
       .get(
-        import.meta.env.VITE_SERVER_DOMAIN + "/user-written-blogs",
-        {
-          page,
-          draft,
-          query,
-          deletedDocCount,
-        },
+        import.meta.env.VITE_SERVER_DOMAIN +
+          "/user-written-blogs?" +
+          dataKeys.reduce((accummulator, key) => {
+            return accummulator + key + "=" + data_to_send[key] + "&";
+          }, ""),
         { headers: { Authorization: "Bearer " + access_token } }
       )
       .then(async ({ data }) => {
@@ -63,13 +63,9 @@ const ManageBlogs = () => {
 
   const getLikedBlogs = ({ page }) => {
     axios
-      .post(
-        import.meta.env.VITE_SERVER_DOMAIN + "/liked-blogs",
-        {
-          page,
-        },
-        { headers: { Authorization: "Bearer " + access_token } }
-      )
+      .get(import.meta.env.VITE_SERVER_DOMAIN + "/liked-blogs?page=" + page, {
+        headers: { Authorization: "Bearer " + access_token },
+      })
       .then(async ({ data }) => {
         const formatedData = await filterPaginationData({
           state: likedBlogs,

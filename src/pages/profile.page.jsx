@@ -75,12 +75,16 @@ const ProfilePage = () => {
 
   const getBlogs = ({ page = 1, user_id }) => {
     user_id = user_id == undefined ? blogs.user_id : user_id;
-
+    let data_to_send = { page, author: user_id };
+    let dataKeys = Object.keys(data_to_send);
     axios
-      .post(import.meta.env.VITE_SERVER_DOMAIN + "/search-blogs", {
-        author: user_id,
-        page,
-      })
+      .get(
+        import.meta.env.VITE_SERVER_DOMAIN +
+          "/search-blogs?" +
+          dataKeys.reduce((accummulator, key) => {
+            return accummulator + key + "=" + data_to_send[key] + "&";
+          }, "")
+      )
       .then(async ({ data }) => {
         let formatedData = await filterPaginationData({
           state: blogs,
@@ -115,7 +119,7 @@ const ProfilePage = () => {
 
   const updateFollow = (status) => {
     axios
-      .post(
+      .put(
         import.meta.env.VITE_SERVER_DOMAIN + "/update-follow",
         {
           target: profile._id,
@@ -130,11 +134,8 @@ const ProfilePage = () => {
   };
   const fetchFollowingsInfo = ({ user_id }) => {
     axios
-      .post(
-        import.meta.env.VITE_SERVER_DOMAIN + "/all-followings-count",
-        {
-          user_id,
-        },
+      .get(
+        import.meta.env.VITE_SERVER_DOMAIN + "/all-followings-count/" + user_id,
         { headers: { Authorization: "Bearer " + access_token } }
       )
       .then(({ data }) => {
@@ -144,11 +145,8 @@ const ProfilePage = () => {
   };
   const fetchFollowersInfo = ({ user_id }) => {
     axios
-      .post(
-        import.meta.env.VITE_SERVER_DOMAIN + "/all-followers-count",
-        {
-          user_id,
-        },
+      .get(
+        import.meta.env.VITE_SERVER_DOMAIN + "/all-followers-count/" + user_id,
         { headers: { Authorization: "Bearer " + access_token } }
       )
       .then(({ data }) => {

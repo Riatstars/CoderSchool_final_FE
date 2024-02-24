@@ -14,16 +14,13 @@ const FollowPage = () => {
   const [followers, setFollowers] = useState(null);
 
   let {
-    userAuth: { access_token },
+    userAuth: { access_token, _id },
   } = useContext(UserContext);
 
   const getFollowInfo = ({ type, page }) => {
     axios
-      .post(
-        import.meta.env.VITE_SERVER_DOMAIN + "/get-" + type,
-        {
-          page,
-        },
+      .get(
+        import.meta.env.VITE_SERVER_DOMAIN + "/get-" + type + "?page=" + page,
         { headers: { Authorization: "Bearer " + access_token } }
       )
       .then(async ({ data }) => {
@@ -32,7 +29,7 @@ const FollowPage = () => {
           data: type == "followings" ? data.followings : data.followers,
           page,
           user: access_token,
-          countRoute: "/all-" + type + "-count",
+          countRoute: "/all-" + type + "-count/" + _id,
           data_to_send: {},
         });
         if (type == "followings") {

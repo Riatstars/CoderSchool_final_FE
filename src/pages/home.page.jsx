@@ -32,17 +32,17 @@ const HomePage = () => {
 
   const fetchLatestBlogs = ({ page = 1 }) => {
     axios
-      .post(
+      .get(
         import.meta.env.VITE_SERVER_DOMAIN +
           "/latest-blogs" +
-          (access_token ? "-with-auth" : ""),
-        { page },
+          (access_token ? "-with-auth" : "") +
+          "?page=" +
+          page,
         access_token
           ? { headers: { Authorization: "Bearer " + access_token } }
           : {}
       )
       .then(async ({ data }) => {
-        // setBlogs(data.blogs);
         let formatedData = await filterPaginationData({
           state: blogs,
           data: data.blogs,
@@ -58,10 +58,16 @@ const HomePage = () => {
 
   const fetchBlogsByCategory = ({ page = 1 }) => {
     axios
-      .post(import.meta.env.VITE_SERVER_DOMAIN + "/search-blogs", {
-        tag: pageState,
-        page,
-      })
+      .get(
+        import.meta.env.VITE_SERVER_DOMAIN +
+          "/search-blogs?" +
+          (pageState && `tag=${pageState}&`) +
+          (page && `page=${page}`),
+        {
+          tag: pageState,
+          page,
+        }
+      )
       .then(async ({ data }) => {
         let formatedData = await filterPaginationData({
           state: blogs,

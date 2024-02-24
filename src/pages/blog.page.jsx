@@ -45,9 +45,7 @@ const BlogPage = () => {
 
   const fetchBlog = () => {
     axios
-      .post(import.meta.env.VITE_SERVER_DOMAIN + "/get-blog", {
-        blog_id,
-      })
+      .get(import.meta.env.VITE_SERVER_DOMAIN + "/get-blog/" + blog_id)
       .then(async ({ data: { blog } }) => {
         blog.comments = await fetchComments({
           blog_id: blog._id,
