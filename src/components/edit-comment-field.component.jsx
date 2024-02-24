@@ -5,6 +5,7 @@ import axios from "axios";
 import { BlogContext } from "../pages/blog.page";
 
 const EditCommentField = ({
+  commentId,
   commentData,
   action,
   setIsEditting,
@@ -13,7 +14,7 @@ const EditCommentField = ({
   let {
     userAuth: { access_token },
   } = useContext(UserContext);
-  const [comment, setComment] = useState(commentData.comment);
+  const [comment, setComment] = useState(commentData);
 
   const handleEditComment = () => {
     if (!access_token) {
@@ -27,7 +28,7 @@ const EditCommentField = ({
       .put(
         import.meta.env.VITE_SERVER_DOMAIN + "/edit-comment",
         {
-          _id: commentData._id,
+          _id: commentId,
           comment,
         },
         {

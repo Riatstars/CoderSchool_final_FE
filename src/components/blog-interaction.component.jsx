@@ -30,7 +30,6 @@ const BlogInteraction = () => {
     userAuth: { username, access_token },
     userAuth,
   } = useContext(UserContext);
-  console.log(userAuth);
 
   useEffect(() => {
     if (access_token) {
