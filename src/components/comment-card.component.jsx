@@ -199,7 +199,7 @@ const CommentCard = ({ commentData, index, leftVal }) => {
           </p>
           <p className="min-w-fit">{getDay(commentedAt)}</p>
         </div>
-        <p className="font-gelasio text-xl ml-3">{comment}</p>
+        <p className="font-gelasio text-xl ml-3">{commentContent}</p>
         <div className="flex gap-5 items-center mt-5">
           {commentData.isReplyLoaded ? (
             <button
