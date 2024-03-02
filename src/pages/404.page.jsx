@@ -2,10 +2,8 @@ import { Link } from "react-router-dom";
 import lightPageNotFoundImg from "../imgs/404-light.png";
 import darkPageNotFoundImg from "../imgs/404-dark.png";
 
-import pageNotFoundImg from "../imgs/404.png";
-
-import fullLogoLight from "../imgs/full-logo-light.png";
-import fullLogoDark from "../imgs/full-logo-dark.png";
+import fullLogoLight from "../imgs/logo-light.png";
+import fullLogoDark from "../imgs/logo-dark.png";
 
 import { useContext } from "react";
 import { ThemeContext } from "../App";
@@ -29,7 +27,7 @@ const PageNotFound = () => {
         <img
           src={theme == "light" ? fullLogoDark : fullLogoLight}
           alt=""
-          className="h-8 object-contain mx-auto select-none"
+          className="h-20 object-contain mx-auto select-none"
         />
         <p className="mt-5 text-dark-grey">
           Read millions of stories around the earth!

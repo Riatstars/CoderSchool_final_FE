@@ -54,7 +54,7 @@ Upon accessing Notification page, the page will display <strong>unseen and seen<
 <h2 id="backend-api-endpoints">Backend API Endpoints</h2>
 <h3 id="image-data-to-aws-link">Image data to AWS link</h3>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /get-upload-url
+* @route GET /get-upload-url
 * @description Upload image to AWS service and return link to that image
 * @body   
 * @access Public  
@@ -83,7 +83,7 @@ Upon accessing Notification page, the page will display <strong>unseen and seen<
 */</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /change-pasword
+* @route PUT /change-pasword
 * @description Change your account password
 * @body {curentPassword, newPasssword}  
 * @access Login required
@@ -91,21 +91,21 @@ Upon accessing Notification page, the page will display <strong>unseen and seen<
 </code></pre>
 <h2 id="blog">Blog</h2>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /latest-blogs
+* @route GET /latest-blogs
 * @description Fetch latest blogs
 * @body {page}  
 * @access Public  
 */</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /latest-blogs-with-auth
+* @route GET /latest-blogs-with-auth
 * @description Fetch latest blogs when user is signed in
 * @body {page}  
 * @access Public  
 */</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /all-latest-blogs-count
+* @route GET /all-latest-blogs-count
 * @description Count latest blogs
 * @body none
 * @access Public  
@@ -119,21 +119,21 @@ Upon accessing Notification page, the page will display <strong>unseen and seen<
 */</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /search-blogs
+* @route GET /search-blogs
 * @description Search for blogs with specific queries
 * @body { tag, query, page, author, limit, eliminate_blog }
 * @access Public  
 */</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /search-blogs-count
+* @route GET /search-blogs-count
 * @description Search for number of blogs with specific queries
 * @body { tag, query, author }
 * @access Public  
 */</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /get-blog
+* @route GET /get-blog/:blog_id
 * @description Get info of a specific blog
 * @body { blog_id, draft, mode }
 * @access Public  
@@ -154,42 +154,42 @@ Upon accessing Notification page, the page will display <strong>unseen and seen<
 */</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /isliked-by-user
+* @route GET /isliked-by-user/:blog_id
 * @description Check if a blog is liked by a user already or not.
 * @body { _id }
 * @access Sign in required 
 */</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /user-written-blogs
+* @route GET /user-written-blogs
 * @description Fetch blogs that written by a user
 * @body { page, draft, query, deletedDocCount }
 * @access Sign in required 
 */</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /user-written-blogs-count
+* @route GET /user-written-blogs-count
 * @description Count number blogs that written by a user
 * @body { draft, query }
 * @access Sign in required 
 */</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /liked-blogs
+* @route GET /liked-blogs
 * @description fetch blogs that liked by a user
 * @body { page }
 * @access Sign in required 
 */</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /liked-blogs-count
+* @route GET /liked-blogs-count
 * @description count blogs that liked by a user
 * @body none
 * @access Sign in required 
 */</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /delete-blog
+* @route DELETE /delete-blog/:blog_id
 * @description Delete a blog
 * @body { blog_id }
 * @access Sign in required 
@@ -197,28 +197,28 @@ Upon accessing Notification page, the page will display <strong>unseen and seen<
 </code></pre>
 <h2 id="user">User</h2>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /get-profile
+* @route GET /get-profile
 * @description Get user profile
 * @body { username }
 * @access Public
 **/</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /search-users
+* @route GET /search-users
 * @description Search for users
 * @body { query }
 * @access Public
 **/</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /update-profile-img
+* @route PUT /update-profile-img
 * @description Update User profile picture
 * @body { url }
 * @access Signin Required
 **/</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /update-profile
+* @route PUT /update-profile
 * @description Update User profile infomation
 * @body { username, bio, social_links }
 * @access Signin Required
@@ -233,35 +233,35 @@ Upon accessing Notification page, the page will display <strong>unseen and seen<
 **/</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /update-follow
+* @route PUT /update-follow
 * @description Update infomation of a follow relationship
 * @body {target, status}
 * @access Signin Required
 **/</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /get-followings
+* @route GET /get-followings
 * @description Fetch following infomation of a user
 * @body {page}
 * @access Signin Required
 **/</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /get-followings-count
+* @route GET /all-followings-count/:user_id
 * @description Count following users of a user
 * @body none
 * @access Signin Required
 **/</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /get-followers
+* @route GET /get-followers
 * @description Fetch followers infomation of a user
 * @body {page}
 * @access Signin Required
 **/</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /get-followers-count
+* @route GET /all-followers-count/:user_id
 * @description Count followers of a user
 * @body none
 * @access Signin Required
@@ -276,28 +276,28 @@ Upon accessing Notification page, the page will display <strong>unseen and seen<
 **/</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /edit-comment
+* @route PUT /edit-comment
 * @description Edit comment
 * @body { _id, comment }
 * @access Signin Required
 **/</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /get-blog-comments
+* @route GET /get-blog-comments
 * @description Get comments of a blog
 * @body { blog_id, skip }
 * @access Public
 **/</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /get-replies
+* @route GET /get-replies
 * @description Get replies of a comment
 * @body { _id, skip }
 * @access Public
 **/</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /delete-comment
+* @route DELETE /delete-comment/:comment_id 
 * @description Delete a comment
 * @body { _id }
 * @access  Signin Required
@@ -305,21 +305,21 @@ Upon accessing Notification page, the page will display <strong>unseen and seen<
 </code></pre>
 <h2 id="notification-1">Notification</h2>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /new-notification
+* @route GET /new-notification
 * @description Check if user have new  notification
 * @body none
 * @access  Signin Required
 **/</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /notifications
+* @route GET /notifications
 * @description Fetch notifications of an user
 * @body { page, filter, deletedDocCount }
 * @access  Signin Required
 **/</span>
 </code></pre>
 <pre class=" language-javascript"><code class="prism  language-javascript"><span class="token comment">/**  
-* @route POST /all-notifications-count
+* @route GET /all-notifications-count
 * @description Count notifications of an user
 * @body { filter }
 * @access  Signin Required
